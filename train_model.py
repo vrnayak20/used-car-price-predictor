@@ -12,7 +12,7 @@ from sklearn.metrics import mean_absolute_error, r2_score
 INPUT_PATH = 'data/large_vehicles.csv'
 MODEL_PATH = 'models/price_model.joblib'
 
-# --- 1. The Cleaning Logic (The "Universal Translator") ---
+# Cleaning Logic
 def standardize_fuel(val):
     if pd.isna(val): return 'unknown'
     val = str(val).lower().strip()
@@ -52,7 +52,6 @@ def standardize_engine(val):
     if 'diesel' in val: return 'diesel'
     return 'other'
 
-# ---------------------------------------------------------
 
 def train_model():
     print("Starting Training Pipeline...")
@@ -66,15 +65,11 @@ def train_model():
         return
 
     # 2. Basic Filtering & Renaming
-    # Standardize 'odometer' to 'mileage' first thing
-    if 'odometer' in df.columns:
-        df = df.rename(columns={'odometer': 'mileage'})
-    
     df = df.drop_duplicates()
     df = df.dropna(subset=['price', 'year', 'mileage'])
 
     # Strict Quality Control
-    df = df[df['price'] > 1000] # Kept your logic, but 10000 might be too high? Adjusted to 1000 for safety.
+    df = df[df['price'] > 1000]
     df = df[df['price'] < 100000]
     df = df[df['year'] > 2005]
     df = df[df['mileage'] < 250000]
@@ -83,9 +78,6 @@ def train_model():
 
     # --- 3. APPLY STANDARDIZATION ---
     print("   - Standardizing columns...")
-    
-    # We apply the logic directly to the Kaggle Column Names
-    # If the column is missing, we fill with 'unknown' first
     
     # FUEL
     if 'fuel_type' in df.columns:
@@ -105,16 +97,13 @@ def train_model():
     else:
         df['transmission_clean'] = 'unknown'
 
-    # ENGINE (Sometimes 'engine' or 'cylinders')
+    # ENGINE
     if 'engine' in df.columns:
         df['engine_clean'] = df['engine'].apply(standardize_engine)
-    elif 'cylinders' in df.columns:
-        df['engine_clean'] = df['cylinders'].apply(standardize_engine)
     else:
         df['engine_clean'] = 'unknown'
     
     # --- 4. Define Features ---
-    # These are the Exact Column Names we want in X
     features = [
         'manufacturer', 'model', 'year', 'mileage', 
         'transmission_clean', 'fuel_clean', 'drive_clean', 'engine_clean'
@@ -138,7 +127,6 @@ def train_model():
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.1, random_state=42)
 
     # 6. Preprocessing
-    # FIX: Ensure these match the 'features' list exactly
     categorical_cols = ['manufacturer', 'model', 'transmission_clean', 'fuel_clean', 'drive_clean', 'engine_clean']
     
     preprocessor = ColumnTransformer(

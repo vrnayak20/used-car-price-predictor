@@ -3,7 +3,6 @@ import pandas as pd
 # Load the dataset
 df = pd.read_csv('data/cleaned_vehicles.csv')
 
-# The columns we care about
 cols = ['fuel_clean', 'drive_clean', 'transmission_clean', 'engine_clean']
 
 print("--- VOCABULARY CHECK ---")

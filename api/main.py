@@ -7,7 +7,7 @@ import numpy as np
 
 # --- Configuration ---
 MODEL_PATH = 'models/price_model.joblib'
-MARKET_ADJUSTMENT_SCALAR = 1.20 
+MARKET_ADJUSTMENT_SCALAR = 1.0
 
 # --- Standardization Logic ---
 
@@ -60,9 +60,9 @@ app = FastAPI(
 # --- Load Model ---
 try:
     model_pipeline = joblib.load(MODEL_PATH)
-    print("✅ Model loaded successfully.")
+    print("Model loaded successfully.")
 except Exception as e:
-    print(f"❌ CRITICAL ERROR: Could not load model from {MODEL_PATH}")
+    print(f"CRITICAL ERROR: Could not load model from {MODEL_PATH}")
     model_pipeline = None
 
 # --- Data Contracts ---
@@ -92,7 +92,7 @@ def decode_vin_nhtsa(vin: str):
         results = data.get('Results', [])
         
         if not results:
-            print("❌ NHTSA API returned no results.")
+            print("NHTSA API returned no results.")
             return None
             
         item = results[0] # DecodeVinValues returns a list with 1 item containing all fields
@@ -122,7 +122,7 @@ def decode_vin_nhtsa(vin: str):
             return details
         return None
     except Exception as e:
-        print(f"❌ API Connection Error: {e}")
+        print(f"API Connection Error: {e}")
         return None
 
 # --- Endpoints ---

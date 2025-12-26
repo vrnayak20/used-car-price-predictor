@@ -45,17 +45,14 @@ with tab1:
                     response = requests.post(f"{API_URL}/predict/vin", json=payload)
                     if response.status_code == 200:
                         data = response.json()
-                        st.success("✅ VIN Decoded Successfully!")
+                        st.success("VIN Decoded Successfully!")
                         
                         # --- Results Display ---
-                        st.markdown(f"### 💰 Estimated Price: ${data['predicted_price']:,.2f}")
+                        st.markdown(f"### Estimated Price: ${data['predicted_price']:,.2f}")
                         st.caption(f"Confidence Range: ${data['confidence_interval']['low']:,.2f} - ${data['confidence_interval']['high']:,.2f}")
                         
-                        # Car Details Card
-                        st.markdown("#### Vehicle Specs Detected")
                         st.markdown("The system automatically extracted these features from the VIN:")
                         
-                        # Use columns for a clean look
                         specs = data['input']
                         features = data['details']['features_detected']
                         
@@ -98,7 +95,6 @@ with tab2:
         drive = st.selectbox("Drivetrain", ["unknown", "4wd", "awd", "fwd", "rwd"])
         fuel = st.selectbox("Fuel Type", ["unknown", "gas", "diesel", "hybrid", "electric"])
     with col_f:
-        # We map these to the raw strings the API expects
         cylinders = st.selectbox("Cylinders", ["unknown", "4 cylinders", "6 cylinders", "8 cylinders", "other"])
         trans = st.selectbox("Transmission", ["unknown", "automatic", "manual"])
         
@@ -120,7 +116,7 @@ with tab2:
                 response = requests.post(f"{API_URL}/predict/manual", json=payload)
                 if response.status_code == 200:
                     data = response.json()
-                    st.markdown(f"### 💰 Estimated Price: ${data['predicted_price']:,.2f}")
+                    st.markdown(f"### Estimated Price: ${data['predicted_price']:,.2f}")
                     st.caption(f"Range: ${data['confidence_interval']['low']:,.2f} - ${data['confidence_interval']['high']:,.2f}")
                     
                     # Debug Info
