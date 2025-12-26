@@ -1,0 +1,14 @@
+/data
+/venv
+/models
+__pycache__/
+*.pyc
+
+.DS_Store
+Thumbs.db
+
+.env
+.vscode/
+.idea/
+
+debug_vin.py
